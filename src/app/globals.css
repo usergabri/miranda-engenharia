@@ -1,26 +1,230 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@custom-variant dark (&:is(.dark *));
+
+/* ==========================================================================
+   Miranda Engenharia — design tokens
+   Ciano #00B9D5 e preto #151515 amostrados do PNG original do logo.
+   Petróleo, âmbar e neutros derivados do mesmo matiz do ciano (214°) para
+   fechar a paleta em vez de brigar com a marca.
+   ========================================================================== */
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent-hover: var(--accent-hover);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* marca */
+  --color-brand: var(--brand);
+  --color-brand-text: var(--brand-text);
+  --color-brand-ink: var(--brand-ink);
+
+  /* superfícies escuras (cabeçalho, faixa de estatísticas, rodapé) */
+  --color-surface-dark: var(--surface-dark);
+  --color-surface-dark-2: var(--surface-dark-2);
+  --color-surface-dark-foreground: var(--surface-dark-foreground);
+
+  /* mapa do Brasil */
+  --color-map-idle: var(--map-idle);
+  --color-map-served: var(--map-served);
+  --color-map-hq: var(--map-hq);
+
+  --font-sans: var(--font-plex-sans);
+  --font-heading: var(--font-archivo);
+  --font-mono: var(--font-plex-mono);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+:root {
+  --radius: 0.375rem; /* 6px — canto pequeno, registro técnico */
+
+  /* --- marca (imutável: vem do logo) --- */
+  --brand:                   oklch(0.722 0.127 213.6); /* #00B9D5 */
+  /* Mesmo matiz do ciano, escurecido: o #00B9D5 rende 2.36:1 sobre branco e
+     reprova AA como texto. Este rende 5.31:1 e mantém a identidade. */
+  --brand-deep:              oklch(0.520 0.091 213.6); /* #007689 */
+  /* Texto na cor da marca — resolve sozinho conforme a superfície. */
+  --brand-text:              var(--brand-deep);
+  --brand-ink:               oklch(0.196 0.000 89.9);  /* #151515 */
+
+  /* --- superfícies --- */
+  --background:              oklch(1     0     0);     /* #FFFFFF */
+  --foreground:              oklch(0.270 0.032 219.8); /* #132A31 */
+  --card:                    oklch(1     0     0);
+  --card-foreground:         oklch(0.270 0.032 219.8);
+  --popover:                 oklch(1     0     0);
+  --popover-foreground:      oklch(0.270 0.032 219.8);
+  --muted:                   oklch(0.974 0.003 219.5); /* #F4F7F8 */
+  --muted-foreground:        oklch(0.525 0.027 224.1); /* #5A6E76 */
+  --surface-dark:            oklch(0.268 0.037 222.6); /* #0F2A33 */
+  --surface-dark-2:          oklch(0.318 0.038 222.0);
+  --surface-dark-foreground: oklch(0.974 0.003 219.5);
+
+  /* --- ações --- */
+  --primary:                 oklch(0.352 0.051 221.6); /* #17414E azul-petróleo */
+  --primary-foreground:      oklch(0.990 0     0);
+  --secondary:               oklch(0.974 0.003 219.5);
+  --secondary-foreground:    oklch(0.352 0.051 221.6);
+  --accent:                  oklch(0.767 0.160 72.5);  /* #F0A016 âmbar — só CTA */
+  --accent-foreground:       oklch(0.268 0.037 222.6);
+  --accent-hover:            oklch(0.702 0.150 70.4);  /* #D98C0A */
+  --destructive:             oklch(0.501 0.178 28.7);  /* #B3261E */
+
+  /* --- estrutura --- */
+  --border:                  oklch(0.924 0.007 219.6); /* #E1E7E9 */
+  --input:                   oklch(0.924 0.007 219.6);
+  /* Foco: acompanha --brand-text, então fica no ciano escuro sobre fundo
+     claro (5.31:1) e no ciano da marca sobre fundo escuro. */
+  --ring:                    var(--brand-text);
+
+  /* --- mapa --- */
+  --map-idle:                oklch(0.924 0.007 219.6);
+  --map-served:              oklch(0.722 0.127 213.6);
+  --map-hq:                  oklch(0.352 0.051 221.6);
+}
+
+/*
+  .dark não é um tema alternativo: é o escopo aplicado nas faixas escuras
+  (cabeçalho, estatísticas, rodapé) para que os componentes shadcn herdem os
+  tokens corretos, em vez de receberem override manual em cada JSX.
+*/
+.dark {
+  --background:              oklch(0.268 0.037 222.6);
+  --foreground:              oklch(0.974 0.003 219.5);
+  --card:                    oklch(0.318 0.038 222.0);
+  --card-foreground:         oklch(0.974 0.003 219.5);
+  --popover:                 oklch(0.268 0.037 222.6);
+  --popover-foreground:      oklch(0.974 0.003 219.5);
+  --muted:                   oklch(0.318 0.038 222.0);
+  --muted-foreground:        oklch(0.760 0.020 219.0);
+  --brand-text:              var(--brand);
+  --primary:                 oklch(0.974 0.003 219.5);
+  --primary-foreground:      oklch(0.268 0.037 222.6);
+  --secondary:               oklch(0.348 0.038 222.0);
+  --secondary-foreground:    oklch(0.974 0.003 219.5);
+  /* vermelho claro: o #B3261E do tema claro reprova o contraste sobre petróleo */
+  --destructive:             oklch(0.700 0.165 27.5);
+  --border:                  oklch(1 0 0 / 14%);
+  --input:                   oklch(1 0 0 / 18%);
+  --map-idle:                oklch(1 0 0 / 12%);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+    scroll-behavior: smooth;
+    scroll-padding-top: 5.5rem; /* compensa o cabeçalho sticky nas âncoras */
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+  body {
+    @apply bg-background text-foreground antialiased;
+    text-wrap: pretty;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-heading font-bold tracking-tight;
+    text-wrap: balance;
+  }
+  ::selection {
+    background: var(--brand);
+    color: var(--surface-dark);
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer components {
+  /* Rótulo técnico monoespaçado — eyebrows, CREA, numeração de passos */
+  .rotulo-tecnico {
+    @apply font-mono text-xs font-medium uppercase tracking-[0.18em];
+  }
+
+  /* Link de pular para o conteúdo */
+  .skip-link {
+    @apply sr-only;
+  }
+  .skip-link:focus-visible {
+    @apply not-sr-only fixed left-4 top-4 z-[100] rounded-md bg-accent px-4 py-2
+           font-medium text-accent-foreground outline-none ring-2 ring-ring;
+  }
+}
+
+/* ==========================================================================
+   Movimento — 100% CSS, zero JS, zero biblioteca de animação.
+   Usa scroll-driven animations. Navegador sem suporte mostra o conteúdo
+   estático (degradação limpa). Desligado sob prefers-reduced-motion.
+   ========================================================================== */
+
+@keyframes revelar-entrada {
+  from {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes cabecalho-rolagem {
+  from {
+    background-color: color-mix(in oklab, var(--surface-dark) 82%, transparent);
+    border-bottom-color: transparent;
+    box-shadow: 0 0 0 0 transparent;
+  }
+  to {
+    background-color: color-mix(in oklab, var(--surface-dark) 96%, transparent);
+    border-bottom-color: color-mix(in oklab, var(--brand) 22%, transparent);
+    box-shadow: 0 1px 24px -8px oklch(0 0 0 / 0.55);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @supports (animation-timeline: view()) {
+    .revelar {
+      --r-shift: 0%;
+      animation: revelar-entrada linear both;
+      animation-timeline: view();
+      animation-range: entry calc(4% + var(--r-shift)) cover calc(26% + var(--r-shift));
+    }
+  }
+  @supports (animation-timeline: scroll()) {
+    .cabecalho-rolagem {
+      animation: cabecalho-rolagem linear both;
+      animation-timeline: scroll(root block);
+      animation-range: 0 120px;
+    }
+  }
 }
