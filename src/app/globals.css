@@ -123,6 +123,14 @@
   --muted:                   oklch(0.318 0.038 222.0);
   --muted-foreground:        oklch(0.760 0.020 219.0);
   --brand-text:              var(--brand);
+  /*
+    --ring precisa ser redeclarado aqui, e não só em :root.
+    A substituição de var() acontece na declaração: `--ring: var(--brand-text)`
+    em :root já resolve para o ciano escuro, e esse valor computado é herdado
+    para dentro de .dark mesmo com --brand-text mudando. Sem esta linha, o anel
+    de foco mede 1,60–2,82:1 sobre as faixas escuras e reprova a WCAG 2.4.11.
+  */
+  --ring:                    var(--brand);
   --primary:                 oklch(0.974 0.003 219.5);
   --primary-foreground:      oklch(0.268 0.037 222.6);
   --secondary:               oklch(0.348 0.038 222.0);
@@ -130,7 +138,9 @@
   /* vermelho claro: o #B3261E do tema claro reprova o contraste sobre petróleo */
   --destructive:             oklch(0.700 0.165 27.5);
   --border:                  oklch(1 0 0 / 14%);
-  --input:                   oklch(1 0 0 / 18%);
+  /* 18% rendia 1,74:1 contra o preenchimento do campo; a borda do input é
+     elemento de interface e precisa de 3:1 (WCAG 1.4.11). */
+  --input:                   oklch(1 0 0 / 38%);
   --map-idle:                oklch(1 0 0 / 12%);
 }
 
@@ -141,7 +151,10 @@
   html {
     @apply font-sans;
     scroll-behavior: smooth;
-    scroll-padding-top: 5.5rem; /* compensa o cabeçalho sticky nas âncoras */
+    /* Único compensador de âncora do projeto. Antes somava com um scroll-mt-24
+       no componente Secao, e as duas regras juntas jogavam a seção 184px abaixo
+       do topo — 247px até o título aparecer. Calibrado ao cabeçalho de 73px. */
+    scroll-padding-top: 5rem;
   }
   @media (prefers-reduced-motion: reduce) {
     html {

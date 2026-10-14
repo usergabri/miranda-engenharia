@@ -40,7 +40,8 @@ export function Secao({
       id={id}
       aria-labelledby={rotulada ? `${id}-titulo` : undefined}
       className={cn(
-        "scroll-mt-24",
+        // Sem scroll-mt aqui: a compensação de âncora vive só no
+        // scroll-padding-top do <html>. As duas somavam.
         compacta ? "py-12 md:py-16" : "py-20 md:py-28",
         fundos[fundo],
         className,

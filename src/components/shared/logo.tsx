@@ -5,29 +5,34 @@ import { conteudo } from "@/lib/content";
 import { cn } from "@/lib/utils";
 
 interface LogoProps {
-  /** `completo` = marca + lettering; `marca` = apenas o "M". */
-  variante?: "completo" | "marca";
+  /**
+   * `escuro` = lettering branco, para as faixas escuras.
+   * `claro`  = lettering #1A1A1A, para fundo claro.
+   */
+  tema?: "escuro" | "claro";
   className?: string;
   priority?: boolean;
 }
 
 /**
- * O lettering do logo original existe apenas em branco — por isso a marca só
- * aparece sobre as faixas escuras (cabeçalho e rodapé). Os PNGs em
- * /public/brand foram recortados do arquivo original preservando o ciano
- * #00B9D5 exato.
+ * Logo vetorial oficial. Substituiu os PNGs recortados do arquivo original:
+ * além de nítido em qualquer tamanho, o SVG tem 22 KB contra os 52 KB do PNG,
+ * que ainda era servido a 791x258 para uma caixa de 135x44 — quase 6x maior
+ * que o necessário.
+ *
+ * O ciano do vetor é #00B8D9, levemente diferente do #00B9D5 que eu havia
+ * amostrado do PNG. O vetor é a fonte autoritativa; os tokens da paleta
+ * seguem derivados do mesmo matiz, então nada mais precisa mudar.
  */
-export function Logo({ variante = "completo", className, priority = false }: LogoProps) {
-  const completo = variante === "completo";
-
+export function Logo({ tema = "escuro", className, priority = false }: LogoProps) {
   return (
     <Image
-      src={caminhoAsset(completo ? "/brand/logo-horizontal.png" : "/brand/logo-marca.png")}
+      src={caminhoAsset(tema === "escuro" ? "/brand/logo.svg" : "/brand/logo-fundo-claro.svg")}
       alt={`${conteudo.empresa.nomeFantasia} — engenharia mecânica`}
-      width={completo ? 791 : 424}
-      height={completo ? 258 : 257}
+      width={793}
+      height={261}
       priority={priority}
-      className={cn("w-auto", completo ? "h-10 md:h-11" : "h-8", className)}
+      className={cn("h-10 w-auto md:h-11", className)}
     />
   );
 }

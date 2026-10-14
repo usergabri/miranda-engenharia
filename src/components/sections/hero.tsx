@@ -24,7 +24,17 @@ export function Hero() {
           <Revelar>
             <h1
               id="hero-titulo"
-              className="text-[2.5rem] leading-[1.05] sm:text-5xl lg:text-6xl xl:text-[4.15rem]"
+              /*
+                Escala contínua em vez de degraus de breakpoint. O salto para
+                lg:text-6xl acontecia em 1024, onde a coluna de texto tem 509px:
+                a headline quebrava em 6 linhas de ~12 caracteres e empurrava o
+                CTA para y=765. O clamp acompanha a largura sem esse degrau.
+
+                O topo trava em 3.5rem porque a coluna de texto para de crescer
+                em 1280 (max-w-7xl): acima disso a fonte aumentava e a headline
+                ganhava uma quinta linha dentro da mesma largura de 672px.
+              */
+              className="text-[clamp(2.25rem,4.4vw,3.5rem)] leading-[1.05]"
             >
               {headline.inicio}{" "}
               <span className="relative text-primary">
@@ -37,11 +47,11 @@ export function Hero() {
               {headline.fim}
             </h1>
 
-            <p className="mt-8 max-w-2xl text-lg leading-relaxed text-muted-foreground">
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-muted-foreground">
               {subheadline}
             </p>
 
-            <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
               <Button asChild variant="cta" size="xl">
                 <a href={ctaPrimario.href}>
                   {ctaPrimario.rotulo}
@@ -59,12 +69,12 @@ export function Hero() {
               assim, quando a linha precisa quebrar (mobile, ou enquanto o CREA
               estiver com o texto de placeholder), nenhuma linha começa com "·".
             */}
-            <ul className="mt-9 flex flex-wrap items-center gap-y-2 border-t border-border pt-7 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground sm:text-xs">
+            <ul className="mt-8 flex flex-wrap items-center gap-y-2 border-t border-border pt-6 font-mono text-[0.7rem] uppercase tracking-[0.14em] text-muted-foreground sm:text-xs">
               {microtrust.map((item, indice) => (
                 <li key={item} className="whitespace-nowrap">
                   {item}
                   {indice < microtrust.length - 1 ? (
-                    <span aria-hidden className="px-2.5 text-brand">
+                    <span aria-hidden className="px-2.5 text-brand-text">
                       ·
                     </span>
                   ) : null}

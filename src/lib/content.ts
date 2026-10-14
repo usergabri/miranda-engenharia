@@ -147,7 +147,16 @@ export interface DepoimentoNominal {
   tipo: "nominal";
   id: string;
   texto: string;
-  autor: { nome: string; cargo: string; empresa: string };
+  /** O dado concreto do serviço — é o que dá peso ao depoimento. */
+  escopo: string;
+  autor: {
+    nome: string;
+    cargo: string;
+    empresa: string;
+    cidade: string;
+    /** Logo do cliente. Substitui o avatar de iniciais quando existe. */
+    logo?: Imagem;
+  };
 }
 
 export interface MiniCaseAnonimo {
@@ -323,12 +332,11 @@ export const conteudo: Conteudo = {
       "[PREENCHER: 2 a 3 frases concretas sobre a origem da atuação. Ex.: 'Passei os primeiros anos em manutenção de caldeiras em usina sucroalcooleira e migrei para inspeção depois de conduzir a adequação NR-13 de uma planta inteira. Hoje o escritório concentra laudos de equipamentos sob pressão e perícias de sinistro industrial.' Evite frases como 'somos comprometidos com a excelência'.]",
     ],
     foto: {
-      src: "/images/engenheiro.png",
-      alt: `${NOME_ENGENHEIRO}, engenheiro mecânico responsável técnico`,
+      src: "/images/engenheiro.jpg",
+      alt: "Aferição de válvula de segurança em campo, com manômetro padrão",
       largura: 900,
       altura: 1125,
-      briefing:
-        "[PREENCHER: retrato real do engenheiro, 4:5, em campo — planta industrial, casa de máquinas ou bancada, com EPI. Luz natural, sem fundo de estúdio branco. NÃO usar banco de imagens.]",
+      briefing: "Foto real fornecida pelo cliente, recortada em 4:5.",
     },
     linkedin: "https://www.linkedin.com/in/[PREENCHER: perfil-linkedin]",
   },
@@ -373,12 +381,11 @@ export const conteudo: Conteudo = {
       "Resposta em até 2h",
     ],
     imagem: {
-      src: "/images/hero.png",
-      alt: "Inspeção técnica de equipamento industrial em campo",
+      src: "/images/hero.jpg",
+      alt: "Medição de espessura por ultrassom em vaso de pressão de nitrogênio, em planta industrial",
       largura: 900,
       altura: 1200,
-      briefing:
-        "[PREENCHER: foto real de vistoria, 3:4 — engenheiro medindo/inspecionando equipamento (caldeira, vaso de pressão, casa de máquinas), com prancheta ou instrumento em mão. Ambiente industrial real. NÃO usar foto genérica de engrenagem ou capacete em fundo branco.]",
+      briefing: "Foto real fornecida pelo cliente, recortada em 3:4.",
     },
   },
 
@@ -559,59 +566,76 @@ export const conteudo: Conteudo = {
       eyebrow: "Depoimentos",
       titulo: "O que dizem quem já precisou do documento",
       subtitulo:
-        "Clientes sob acordo de confidencialidade aparecem como mini-case, sem identificação.",
+        "Nome, empresa, cidade e escopo de cada serviço — tudo conferível. Clientes sob acordo de confidencialidade aparecem como mini-case, sem identificação.",
     },
+    /*
+      Depoimentos reais, fornecidos pelo cliente. O texto original de cada um é
+      mais longo; aqui está condensado para caber no card, preservando as frases
+      que carregam fato (escopo, prazo, documentação) e descartando as de
+      cortesia. O arquivo original está em assets/depoimentos.txt.
+
+      Observação de vocabulário: os três depoentes dizem "RT" (Responsável
+      Técnico), não "ART". Mantido como eles escreveram.
+    */
     itens: [
       {
         tipo: "nominal",
-        id: "depoimento-1",
-        texto: "[PREENCHER: depoimento real, 2 a 3 frases. Peça ao cliente que cite o problema concreto e o desfecho, não adjetivos.]",
-        autor: {
-          nome: "[PREENCHER: nome]",
-          cargo: "[PREENCHER: cargo]",
-          empresa: "[PREENCHER: empresa]",
-        },
-      },
-      {
-        tipo: "anonimo",
-        id: "case-1",
+        id: "protein-meal",
+        escopo: "Digestores, válvulas e manômetros",
         texto:
-          "[PREENCHER: descrição do caso em 2 frases — qual era o risco e o que o laudo destravou.]",
-        contexto: {
-          segmento: "Indústria alimentícia",
-          uf: "SP",
-          resultado: "[PREENCHER: resultado concreto — ex. 'Adequação NR-13 de 6 vasos concluída em 21 dias']",
+          "Contratamos a Miranda Engenharia para os serviços nos nossos digestores, incluindo as válvulas, a aferição dos manômetros e a emissão das respectivas RTs. A equipe não se limitou à execução: acompanhou as pendências encontradas durante o processo e trabalhou para que todas fossem solucionadas. Recebemos a documentação e os laudos de forma completa, dentro do cronograma estabelecido.",
+        autor: {
+          nome: "Augusto Bernardes",
+          cargo: "Gerente Industrial",
+          empresa: "Protein Meal",
+          cidade: "Nova Esperança, PR",
+          logo: {
+            src: "/clientes/protein-meal.png",
+            alt: "Protein Meal",
+            largura: 560,
+            altura: 161,
+            briefing: "Logo fornecido pelo cliente.",
+          },
         },
       },
       {
         tipo: "nominal",
-        id: "depoimento-2",
-        texto: "[PREENCHER: depoimento real, 2 a 3 frases.]",
-        autor: {
-          nome: "[PREENCHER: nome]",
-          cargo: "[PREENCHER: cargo]",
-          empresa: "[PREENCHER: empresa]",
-        },
-      },
-      {
-        tipo: "anonimo",
-        id: "case-2",
+        id: "art-mecanica",
+        escopo: "≈450 vasos de pressão",
         texto:
-          "[PREENCHER: descrição do caso em 2 frases — qual era o risco e o que a perícia demonstrou.]",
-        contexto: {
-          segmento: "Seguradora",
-          uf: "MG",
-          resultado: "[PREENCHER: resultado concreto — ex. 'Nexo causal afastado; indenização revisada']",
+          "Prestamos serviços para a Nemak e contratamos a Miranda Engenharia para integrar nossa equipe em aproximadamente 450 vasos de pressão — medição de espessura, aferição das válvulas e dos manômetros. Mesmo diante da quantidade de equipamentos, a execução foi organizada e os horários e serviços previamente combinados foram respeitados. A documentação gerada foi conduzida de forma estruturada, o que nos permitiu acompanhar e atender aos prazos do projeto.",
+        autor: {
+          nome: "Leonardo Campos",
+          cargo: "Sócio-proprietário",
+          empresa: "ART Mecânica e Automação",
+          cidade: "Sete Lagoas, MG",
+          logo: {
+            src: "/clientes/art-mecanica.png",
+            alt: "ART Mecânica e Automação",
+            largura: 400,
+            altura: 173,
+            briefing: "Logo fornecido pelo cliente.",
+          },
         },
       },
       {
         tipo: "nominal",
-        id: "depoimento-3",
-        texto: "[PREENCHER: depoimento real, 2 a 3 frases.]",
+        id: "biobras",
+        escopo: "5 compressores e 1 vaso de pressão",
+        texto:
+          "Contratamos a Miranda Engenharia para cinco compressores e um vaso de pressão, incluindo a elaboração da documentação necessária e a emissão da RT. Sempre que surgia alguma dúvida relacionada aos equipamentos ou à documentação, recebíamos as orientações para dar continuidade de forma adequada. Os laudos e documentos foram entregues completos dentro do prazo determinado.",
         autor: {
-          nome: "[PREENCHER: nome]",
-          cargo: "[PREENCHER: cargo]",
-          empresa: "[PREENCHER: empresa]",
+          nome: "Larissa Sisti Brasinha",
+          cargo: "Sócia-proprietária",
+          empresa: "Biobras Biodiesel",
+          cidade: "Nova Esperança, PR",
+          logo: {
+            src: "/clientes/biobras.png",
+            alt: "Biobras Biodiesel",
+            largura: 240,
+            altura: 240,
+            briefing: "Logo fornecido pelo cliente.",
+          },
         },
       },
     ],
